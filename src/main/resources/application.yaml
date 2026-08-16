@@ -1,3 +1,100 @@
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /ma-fashion-vibe
+
 spring:
   application:
     name: ma_fashion_vibe-be
+  servlet:
+    multipart:
+      max-file-size: 100MB       # Giới hạn dung lượng mỗi file ảnh,video
+      max-request-size: 100MB    # Giới hạn tổng dung lượng nếu up nhiều ảnh,video cùng lúc
+
+
+  datasource:
+#   ?useSSL=false&serverTimezone=UTC   ?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=Asia/Ho_Chi_Minh
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update     # DEV: update; PRODUCTION: validate (dùng flyway)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+## OAuth2 (Google) — client registration (used for login via Google)      dành cho mô hình Server-Side Rendering (tức là dùng thẻ <a href="/oauth2/authorization/google"> để backend tự động nhảy sang trang Google). Nhưng hiện tại, hệ thống M.A Fashion Vibe đang chạy theo mô hình Client-Side OAuth2 (Mô hình hiện đại nhất) tách biệt hoàn toàn Frontend (React) và Backend (Spring Boot).
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: ${GOOGLE_CLIENT_ID:replace_me}
+#            client-secret: ${GOOGLE_CLIENT_SECRET:replace_me}
+#            scope:
+#              - openid
+#              - profile
+#              - email
+#            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+#        provider:
+#          google:
+#            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+#            token-uri: https://oauth2.googleapis.com/token
+#            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+#            user-name-attribute: sub
+
+# App specific config (JWT, Cloudinary, VNPAY)
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-exp-minutes: ${JWT_ACCESS_MINUTES}
+    refresh-token-exp-days: ${JWT_REFRESH_DAYS}
+
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+
+  vnpay:
+    tmnCode: ${VNPAY_TMN_CODE}
+    hashSecret: ${VNPAY_HASH_SECRET}
+    url: ${VNPAY_URL}
+    returnUrl: ${VNPAY_RETURN_URL}
+
+admin:
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
+  name: ${ADMIN_NAME}
+
+
+## Springdoc (Swagger)
+#springdoc:
+#  api-docs:
+#    path: /v3/api-docs
+#  swagger-ui:
+#    path: /swagger-ui.html
+#
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.web: DEBUG
